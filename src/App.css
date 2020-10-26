@@ -1,3 +1,8 @@
+body{
+  background-color: antiquewhite;
+
+}
+
 .App {
   text-align: center;
 }
@@ -35,4 +40,25 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+input{
+  /* width: 20em; */
+}
+
+
+.edit {
+margin-left:10em ;
+}
+.delete {
+  margin-left:10em ;
+
+}
+.deleteall {
+}
+.add {
+
+}
+.update {
+
 }
