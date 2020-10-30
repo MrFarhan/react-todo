@@ -1,67 +1,96 @@
 import React, { useState } from 'react'
-import '../App.css';
-
 
 export const Todo = () => {
+    const [inputVal, setInputVal] = useState()
+    const [arr, setArr] = useState([])
+    const [editIndex, setEditIndex] = useState()
+    const [data, setData] = useState([[]]);
 
-    const [input, setInput] = useState();
-    const [showArr, SetShowArr] = useState([]);
-    const [editIndex, SetEditIndex] = useState();
-    const [update, setUpdate] = useState();
 
 
-    const ShowArrFunc = () => {
-        let temp = [...showArr]
-        temp.push(input)
-        SetShowArr(temp)
-        setInput("")
-
+    //FUNCTIONS 
+    const Add = () => {
+        let temp = [...arr]
+        if (inputVal.trim().length) {
+            let temp1 = [...data]
+            temp1.unshift(arr)
+            setData(temp1)
+            temp.push(inputVal?.toUpperCase())
+            setArr(temp)
+            setInputVal("")
+        }
     }
 
 
-    const Remove = (remIndex) => {
-        let temp = [...showArr]
-        temp = temp.filter((item, index) => index !== remIndex)
-        SetShowArr(temp)
+
+
+    const Delete = (DeleteIndex) => {
+        let temp = [...arr]
+        let temp1 = [...data]
+        temp1.unshift(arr)
+        setData(temp1)
+        temp = temp.filter((value, index) => index !== DeleteIndex)
+        setArr(temp)
+        setInputVal("")
+
     }
 
+    const Edit = (Editvalue, EditIndex) => {
+        let temp = [...arr]
+        setInputVal(temp[EditIndex])
+        setEditIndex(EditIndex)
 
-    const Edit = (EditIndex) => {
-        let temp = [...showArr]
-        temp = temp.filter((item, index) => index === EditIndex)[0]
-        console.log(temp)
-        setInput(temp)
-        SetEditIndex(EditIndex)
     }
 
     const Update = () => {
-        let temp = [...showArr]
-        temp[editIndex] = input
-        SetShowArr(temp)
-        SetEditIndex(false)
-        setInput("")
+        if (inputVal.trim().length) {
+            let temp = [...arr]
+            let temp1 = [...data]
+            temp1.unshift(arr)
+            setData(temp1)
+            temp[editIndex] = inputVal?.toUpperCase()
+            setArr(temp)
+            setEditIndex(false)
+            setInputVal("")
 
+        }
     }
 
-    const DeleteAll = () => {
-        SetShowArr([])
+    const Deleteall = () => {
+        let temp1 = [...data]
+        temp1.unshift(arr)
+        setData(temp1)
+        let temp = [...arr]
+        temp = []
+        setArr(temp)
     }
+
+
+    const UndoDelete = () => {
+        let temp1 = [...data]
+        console.log(temp1, "temp 1")
+        if (temp1.length) {
+            setArr(temp1[0])
+            temp1.shift()
+            setData(temp1)
+
+        }
+    }
+
 
     return (
-        <form action="javaScript:void(0)" onSubmit={() => {
-            if (editIndex || editIndex === 0) {
-                Update()
-            } else ShowArrFunc()
-        }}>
-            <input type="text" onChange={(e) => { setInput(e.target.value) }} value={input} />
-            <br />
-            {showArr.map((item, index) =>
-                <div key={index}>{item} <input type="button" onClick={() => Edit(index)} className="edit" value="Edit" /><input type="button" onClick={() => Remove(index)} value="X" /></div>
-            )}
-            <br />
-            {(editIndex || editIndex === 0) ? <input type="submit" className="add" value="Update" /> : <input type="submit" className="update" value="add" />}
-            <button onClick={() => DeleteAll()} className="deleteall">Delete All</button>
-            {console.log(input, "input")}
+
+
+      /* eslint-disable-line no-script-url */ <form action="javaScript:void(0)" >
+
+            <input type="text" onChange={((e) => setInputVal(e.target.value))} value={inputVal} /><br /><br />
+            {arr.map((value, index) => {
+                return <div key={index}>{value}  <span onClick={() => Delete(index)}>X</span><input type="button" onClick={() => Edit(value, index)} value="Edit" /> </div>
+            })}
+            <br /><br />        {editIndex || editIndex === 0 ? <input type="submit" onClick={() => Update()} value="Update" /> : <button onClick={() => Add()}>Add</button>}
+            <input type="button" onClick={Deleteall} value="Delete all" />
+            <input type="button" value="Undo delete" onClick={UndoDelete} />
+
         </form>
     )
 }
