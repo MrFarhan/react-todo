@@ -5,6 +5,7 @@ export const Todo = () => {
     const [arr, setArr] = useState([])
     const [editIndex, setEditIndex] = useState()
     const [data, setData] = useState([[]]);
+    const [redo, setRedo] = useState([[]]);
 
 
 
@@ -66,13 +67,27 @@ export const Todo = () => {
     }
 
 
-    const UndoDelete = () => {
+    const Undo = () => {
+
         let temp1 = [...data]
+        let temp2 = [...redo]
         console.log(temp1, "temp 1")
         if (temp1.length) {
-            setArr(temp1[0])
+            temp2.unshift(data[0])
+            setRedo([arr])
+            setArr(data[0])
             temp1.shift()
             setData(temp1)
+
+        }
+    }    
+    
+    const Redo = () => {
+        let temp1 = [...redo]
+        if (redo.length) {
+            setArr(redo[0])
+            temp1.shift()
+            setRedo(temp1)
 
         }
     }
@@ -89,7 +104,8 @@ export const Todo = () => {
             })}
             <br /><br />        {editIndex || editIndex === 0 ? <input type="submit" onClick={() => Update()} value="Update" /> : <button onClick={() => Add()}>Add</button>}
             <input type="button" onClick={Deleteall} value="Delete all" />
-            <input type="button" value="Undo delete" onClick={UndoDelete} />
+            <input type="button" value="Undo" onClick={Undo} />
+            <input type="button" value="Redo" onClick={Redo} />
 
         </form>
     )
