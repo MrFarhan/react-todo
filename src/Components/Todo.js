@@ -12,7 +12,7 @@ export const Todo = () => {
     //FUNCTIONS 
     const Add = () => {
         let temp = [...arr]
-        if (inputVal.trim().length) {
+        if (inputVal?.trim().length) {
             let temp1 = [...data]
             temp1.unshift(arr)
             setData(temp1)
