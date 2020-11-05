@@ -1,5 +1,8 @@
+import * as firebase from './firebase.js'
 import './App.css';
 import { Todo } from './Components/Todo';
+
+
 
 function App() {
   return (

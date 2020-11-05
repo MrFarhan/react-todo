@@ -1,3 +1,4 @@
+import firebase from 'firebase'
 import React, { useState } from 'react'
 
 export const Todo = () => {
@@ -6,8 +7,6 @@ export const Todo = () => {
     const [editIndex, setEditIndex] = useState()
     const [data, setData] = useState([[]]);
     const [redo, setRedo] = useState([[]]);
-
-
 
     //FUNCTIONS 
     const Add = () => {
@@ -18,6 +17,8 @@ export const Todo = () => {
             setData(temp1)
             temp.push(inputVal?.toUpperCase())
             setArr(temp)
+            firebase.database().ref('Todo/').push(temp);
+            // console.log(firebase.database(), "firebase.database")
             setInputVal("")
         }
     }
@@ -32,6 +33,7 @@ export const Todo = () => {
         setData(temp1)
         temp = temp.filter((value, index) => index !== DeleteIndex)
         setArr(temp)
+        firebase.database().ref('Todo/').push(temp);
         setInputVal("")
 
     }
@@ -51,6 +53,7 @@ export const Todo = () => {
             setData(temp1)
             temp[editIndex] = inputVal?.toUpperCase()
             setArr(temp)
+            firebase.database().ref('Todo/').push(temp);
             setEditIndex(false)
             setInputVal("")
 
@@ -64,6 +67,8 @@ export const Todo = () => {
         let temp = [...arr]
         temp = []
         setArr(temp)
+        firebase.database().ref('Todo/').remove();
+
     }
 
 
@@ -80,8 +85,8 @@ export const Todo = () => {
             setData(temp1)
 
         }
-    }    
-    
+    }
+
     const Redo = () => {
         let temp1 = [...redo]
         if (redo.length) {
@@ -92,11 +97,17 @@ export const Todo = () => {
         }
     }
 
-
+    // var arrdata = firebase.database().ref('Todo/');
+    // arrdata.on('value', function (snapshot) {
+    //     let dbVal = snapshot.val()
+    //     dbVal.map((item, index) => {
+    //         return console.log(index, "index")
+    //     })
+    // });
     return (
 
 
-      /* eslint-disable-line no-script-url */ <form action="javaScript:void(0)" >
+        /* eslint-disable-line no-script-url */ <form action="javaScript:void(0)" >
 
             <input type="text" onChange={((e) => setInputVal(e.target.value))} value={inputVal} /><br /><br />
             {arr.map((value, index) => {
