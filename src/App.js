@@ -1,4 +1,4 @@
-//eslint-disable-next-line
+// eslint-disable-next-line
 import * as firebase from './firebase.js'
 import './App.css';
 import { Todo } from './Components/Todo';
