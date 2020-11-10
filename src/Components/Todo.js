@@ -1,5 +1,6 @@
 import firebase from 'firebase'
 import React, { useState, useEffect } from 'react'
+import { Button, Form, Spinner } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom'
 import '../App.css';
 
@@ -13,6 +14,7 @@ export const Todo = () => {
     const [data, setData] = useState([[]]);
     const [redo, setRedo] = useState([[]]);
     const [userName, setUserName] = useState()
+
 
     useEffect(() => {
         firebase.database().ref('Todo/' + uID + "/Data").on('value', function (snapshot) {
@@ -135,40 +137,37 @@ export const Todo = () => {
 
     const Signout = () => {
         firebase.auth().signOut()
-        history.replace("/")
+        history.push("/")
+        window.location.reload(false)
 
 
     }
 
-     return (
-
-
-
+    return (
 
 
         /* eslint-disable-line no-script-url */
-        <div className="todo_heading">
-            <span>Signed in as: {userName} </span>
+       ( firebase.auth().currentUser || userName ? <div className="todoMain">
+            <div className="signedinUsername"> Signed in as: <b>{userName}</b> </div>
 
             <h1>Todo</h1>
-            <div className="todo">
+            <div>
 
 
                 <form onSubmit={(e) => e.preventDefault()} >
 
-                    <input type="text" onChange={((e) => setInputVal(e.target.value))} value={inputVal} autoFocus={true} /><br /><br />
+                    <Form.Control type="text" onChange={((e) => setInputVal(e.target.value))} value={inputVal} autoFocus={true} /><br /><br />
                     {arr.map((value, index) => {
-                        return <div key={index}>{value}  <span onClick={() => Delete(index)} className="delete">X</span><input type="button" onClick={() => Edit(value, index)} value="Edit" className="edit" /> </div>
+                        return <div key={index}><span className="todoInputList">{value}</span>  <Button variant="danger" className="todoDeletebtn" onClick={() => Delete(index)}>X</Button><Button variant="secondary" className="todoEditbtn" onClick={() => Edit(value, index)} >Edit</Button></div>
                     })}
-                    <br /><br />        {editIndex || editIndex === 0 ? <input type="submit" onClick={() => Update()} value="Update" /> : <button onClick={() => Add()}>Add</button>}
-                    <input type="button" onClick={Deleteall} value="Delete all" />
-                    <input type="button" value="Undo" onClick={Undo} />
-                    <input type="button" value="Redo" onClick={Redo} />
-                    <input type="button" value="Log Out" onClick={Signout} />
-
+                    <br /><br />        {editIndex || editIndex === 0 ? <Button variant="primary" onClick={() => Update()} >Update</Button> : <Button variant="primary" onClick={() => Add()}> Add </Button>}
+                    {' '} <Button variant="primary" onClick={Deleteall}>Delete all</Button>{' '}
+                    <Button variant="primary" onClick={Undo}>Undo</Button>{' '}
+                    <Button variant="primary" onClick={Redo}>Redo</Button>{' '}
+                    <Button variant="primary" onClick={Signout}>Log Out</Button>{' '}
 
                 </form>
             </div>
-        </div>
+        </div> : <Spinner animation="border" />)
     )
 }

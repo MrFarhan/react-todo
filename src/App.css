@@ -3,13 +3,50 @@ body{
 
 }
 
-.todo{
-  align-items: center;
-  justify-content: center;
+.main{
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2em;
 }
 
-.todo_heading{
+.signinComp{
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  padding: 2em;
+
 }
+
+.signupComp{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2em;
+}
+
+.todoMain{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2em;
+
+}
+.todoInputList{
+margin-right: 14em;
+display: inline-block;
+width: 8em;
+}
+
+.todoEditbtn{
+margin-right: 0.2em;
+height: 90%;
+
+}
+
+.todoDeletebtn{
+  margin-right: 0.2em;
+  height: 90%;
+  
+}
+

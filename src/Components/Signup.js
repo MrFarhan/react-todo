@@ -1,11 +1,17 @@
 import React, { useState } from 'react'
 import firebase from 'firebase'
+import { Form, Button } from 'react-bootstrap'
+import { useHistory } from 'react-router-dom'
+
+
 
 export const Signup = () => {
-    const [uName, setuName] = useState()
-    const [uEmail, setuEmail] = useState()
-    const [uPassword, setuPassword] = useState()
-    const [confirmPassword, setconfirmPassword] = useState()
+    const [uName, setuName] = useState("")
+    const [uEmail, setuEmail] = useState("")
+    const [uPassword, setuPassword] = useState("")
+    const [confirmPassword, setconfirmPassword] = useState("")
+    let history = useHistory();
+
 
 
     const Logon = () => {
@@ -18,11 +24,11 @@ export const Signup = () => {
             alert('Please enter a password.');
             return;
         }
-        if (uPassword !== confirmPassword){
+        if (uPassword !== confirmPassword) {
             alert("password and confirm password mismatched")
             return;
         }
-        
+
         firebase.auth().createUserWithEmailAndPassword(uEmail, uPassword).then((res) => {
             let UID = firebase.auth().currentUser?.uid
             console.log(res, "signup res")
@@ -39,18 +45,43 @@ export const Signup = () => {
         });
 
 
-
+        
     }
+            const Loginpush = ()=>{
+                history.replace("/signin")
+            }
+
 
     return (
-        <div>
-            <input type="text" placeholder="User Name" onChange={(e) => setuName(e.target.value)} /><br />
-            <input type="text" placeholder="Email" onChange={(e) => setuEmail(e.target.value)} /><br />
-            <input type="password" placeholder="Set Pawword" onChange={(e) => setuPassword(e.target.value)} /><br />
-            <input type="password" placeholder="Confirm Pawword" onChange={(e) => setconfirmPassword(e.target.value)} />
-            <br />
-            <button>Sign In</button> &nbsp;
-            <button onClick={Logon} >Sign Up</button>
+        <div className="signupComp">
+            <Form>
+
+                <Form.Group id="inputs">
+                    <Form.Label>User Name</Form.Label>
+                    <Form.Control type="text" placeholder="User Name" onChange={(e) => setuName(e.target.value)} value={uName} />
+                </Form.Group>
+
+                <Form.Group >
+                    <Form.Label>Enter Email</Form.Label>
+                    <Form.Control type="email" placeholder="Enter Email " onChange={(e) => setuEmail(e.target.value)} value={uEmail} />
+                </Form.Group>
+
+                <Form.Group >
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type="password" placeholder="Password" onChange={(e) => setuPassword(e.target.value)} value={uPassword} />
+                </Form.Group>
+
+
+                <Form.Group >
+                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Control type="password" placeholder="Confirm Pawword" onChange={(e) => setconfirmPassword(e.target.value)} value={confirmPassword} />
+                </Form.Group>
+
+                <Button variant="primary" onClick={Loginpush} >Sign in</Button> &nbsp;
+                <Button variant="primary" onClick={Logon}>Sign up</Button>
+
+            </Form>
+
         </div>
     )
 }
