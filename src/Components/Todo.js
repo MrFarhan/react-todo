@@ -4,9 +4,6 @@ import { useHistory } from 'react-router-dom'
 import '../App.css';
 
 
-
-
-
 export const Todo = () => {
     const uID = firebase.auth().currentUser?.uid;
     let history = useHistory();
@@ -33,7 +30,7 @@ export const Todo = () => {
         firebase.database().ref(`Users/${firebase.auth().currentUser?.uid}/userName`).on("value", (res) => setUserName(res.val()))
 
 
-
+        //eslint-disable-next-line
     }, [])
 
     //FUNCTIONS 
@@ -143,23 +140,7 @@ export const Todo = () => {
 
     }
 
-    // console.log(firebase.auth().currentUser.uid, "UID", firebase.getCurrentUser, "get current user")
-
-    // firebase.auth().onAuthStateChanged(function (user) {
-    //     if (user) {
-    //         // User is signed in.
-    //         console.log
-    //         console.log("user is signed in")
-    //     } else {
-    //         // No user is signed in.
-    //         console.log("user is not signed in")
-
-    //     }
-    // });
-
-
-
-    return (
+     return (
 
 
 
