@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import firebase from 'firebase'
 import { Form, Button } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 
 
 
@@ -52,6 +52,9 @@ export const Signup = () => {
             }
 
 
+            
+    if((firebase.auth().currentUser))
+    return <Redirect to="/todo" />
     return (
         <div className="signupComp">
             <Form>

@@ -1,7 +1,7 @@
 import firebase from 'firebase'
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Spinner } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 import '../App.css';
 
 
@@ -14,12 +14,15 @@ export const Todo = () => {
     const [data, setData] = useState([[]]);
     const [redo, setRedo] = useState([[]]);
     const [userName, setUserName] = useState()
+    const [loading, setLoading] = useState(true)
 
 
     useEffect(() => {
+        setLoading(true)
         firebase.database().ref('Todo/' + uID + "/Data").on('value', function (snapshot) {
             var dbData = (snapshot.val()) ? snapshot.val() : [];
             setArr(dbData)
+            setLoading(false)
         });
         firebase.database().ref('Todo/' + uID + "/Undo").on('value', function (snapshot) {
             var dbData = (snapshot.val()) ? snapshot.val() : [];
@@ -29,12 +32,12 @@ export const Todo = () => {
             var dbData = (snapshot.val()) ? snapshot.val() : [];
             setRedo(dbData)
         });
+        
         firebase.database().ref(`Users/${firebase.auth().currentUser?.uid}/userName`).on("value", (res) => setUserName(res.val()))
-
-
+        
         //eslint-disable-next-line
-    }, [])
-
+    },[firebase.auth().currentUser])
+   
     //FUNCTIONS 
     const Add = () => {
         let temp = [...arr]
@@ -138,36 +141,38 @@ export const Todo = () => {
     const Signout = () => {
         firebase.auth().signOut()
         history.push("/")
-        window.location.reload(false)
-
-
     }
 
+    if(!(firebase.auth().currentUser))
+    return <Redirect to="/signin" />
     return (
 
 
         /* eslint-disable-line no-script-url */
-       ( firebase.auth().currentUser || userName ? <div className="todoMain">
+        <form onSubmit={(e) => e.preventDefault()} className="todoMain">
             <div className="signedinUsername"> Signed in as: <b>{userName}</b> </div>
 
             <h1>Todo</h1>
             <div>
 
 
-                <form onSubmit={(e) => e.preventDefault()} >
+                <div >
 
                     <Form.Control type="text" onChange={((e) => setInputVal(e.target.value))} value={inputVal} autoFocus={true} /><br /><br />
-                    {arr.map((value, index) => {
-                        return <div key={index}><span className="todoInputList">{value}</span>  <Button variant="danger" className="todoDeletebtn" onClick={() => Delete(index)}>X</Button><Button variant="secondary" className="todoEditbtn" onClick={() => Edit(value, index)} >Edit</Button></div>
-                    })}
-                    <br /><br />        {editIndex || editIndex === 0 ? <Button variant="primary" onClick={() => Update()} >Update</Button> : <Button variant="primary" onClick={() => Add()}> Add </Button>}
+                    {!loading ?
+                        arr.map((value, index) => {
+                            return <div key={index}><span className="todoInputList">{value}</span>
+                                <Button variant="danger" className="todoDeletebtn" onClick={() => Delete(index)}>X</Button>
+                                <Button variant="secondary" className="todoEditbtn" onClick={() => Edit(value, index)} >Edit</Button></div>
+                        }) : <Spinner animation="border" />}
+                    <br /><br />        {editIndex || editIndex === 0 ? <Button type="submit" variant="primary" onClick={() => Update()} >Update</Button> : <Button type="submit" variant="primary" onClick={() => Add()}> Add </Button>}
                     {' '} <Button variant="primary" onClick={Deleteall}>Delete all</Button>{' '}
                     <Button variant="primary" onClick={Undo}>Undo</Button>{' '}
                     <Button variant="primary" onClick={Redo}>Redo</Button>{' '}
                     <Button variant="primary" onClick={Signout}>Log Out</Button>{' '}
 
-                </form>
+                </div>
             </div>
-        </div> : <Spinner animation="border" />)
+        </form>
     )
 }

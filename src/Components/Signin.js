@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import firebase from 'firebase'
-import { useHistory } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 import { Form, Spinner, Button } from 'react-bootstrap'
 
 
@@ -64,6 +64,8 @@ export const Signin = () => {
         history.replace("/signup")
     }
 
+    if((firebase.auth().currentUser))
+    return <Redirect to="/todo" />
     return (
         (loading ? <Spinner animation="border" /> : <div className="signinComp">
             <Form>
